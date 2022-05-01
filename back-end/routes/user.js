@@ -7,7 +7,7 @@ const validation = require('../middleware/validation');
 const userCtrl = require('../controllers/user');
 
 // Routes pour créer un utilisateur et pour qu'il se loggue
-router.post('/signup',validation, userCtrl.signup);
+router.post('/signup', validation, userCtrl.signup);
 router.post('/login', userCtrl.login);
 
 module.exports = router;

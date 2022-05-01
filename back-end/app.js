@@ -3,6 +3,8 @@ require("dotenv").config();
 const express = require('express');
 // Gestion de problèmes de CORS
 const cors = require('cors');
+// Contre les injections dans la base MongoDB
+const mongoSanitize = require('express-mongo-sanitize');
 
 // helmet permet de répondre aux exigences OWASP et d'aider à sécuriser les apps Express en colmatant des failles de sécurités connues
 const helmet = require('helmet');
@@ -10,9 +12,11 @@ const helmet = require('helmet');
 const app = express();
 
 app.use(express.json());
+app.use(mongoSanitize({replaceWith: '_' }));
 
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
+const morgan = require('morgan');
 const sauceRoutes = require('./routes/sauce.js');
 const path = require('path');
 const userRoutes = require('./routes/user');
@@ -43,6 +47,9 @@ app.use(helmet({crossOriginResourcePolicy: false,}));
 
 // Prise en charge du JSON
 app.use(bodyParser.json());
+
+// Morgan permet de créer des logs
+app.use(morgan('combined'));
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/sauces', sauceRoutes);
