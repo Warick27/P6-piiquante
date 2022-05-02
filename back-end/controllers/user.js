@@ -7,6 +7,8 @@ require("dotenv").config();
 const secret = process.env.SECRET_TOKEN;
 const time = process.env.EXPIRE_TOKEN;
 
+const maskemail = require('maskemail');
+
 // Importation du modèle d'utilisateur
 const User = require('../models/User');
 
@@ -16,9 +18,10 @@ exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
       .then(hash => {
         const user = new User({
-          email: req.body.email,
+          email: maskemail(req.body.email, { allowed: /@\.-/ }),
           password: hash
         });
+        console.log(user);
         user.save()
           .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
           .catch(error => res.status(400).json({ error }));
@@ -28,7 +31,7 @@ exports.signup = (req, res, next) => {
 
 // Connexion d'un utilisateur
 exports.login = (req, res, next) => {
-  User.findOne({ email: req.body.email })
+  User.findOne({ email: maskemail(req.body.email, { allowed: /@\.-/ }) })
     .then(user => {
       if (!user) {
         return res.status(401).json({ error: 'Utilisateur non trouvé !' });
