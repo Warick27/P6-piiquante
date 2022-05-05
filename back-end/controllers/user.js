@@ -7,6 +7,7 @@ require("dotenv").config();
 const secret = process.env.SECRET_TOKEN;
 const time = process.env.EXPIRE_TOKEN;
 
+// Permet de masquer les adresses emails
 const maskemail = require('maskemail');
 
 // Importation du modèle d'utilisateur

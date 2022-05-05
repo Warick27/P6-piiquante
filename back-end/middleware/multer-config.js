@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
   },
   // Renommage de l'image qui sera stockée
   filename: (req, file, callback) => {
-    const name = file.originalname.split(' ').join('_');
+    const name = file.originalname.split('.')[0].split(' ').join('_');
     const extension = MIME_TYPES[file.mimetype];
     callback(null, name + Date.now() + '.' + extension);
   }
@@ -23,5 +23,4 @@ const storage = multer.diskStorage({
 // Taille maximale des images en bits qu'acceptera Multer lors de l'importation
 const maxSize = 2048000;
 
-// module.exports = multer({storage: storage}).single('image');
 module.exports = multer({storage: storage, limits: { fileSize: maxSize}}).single('image');
